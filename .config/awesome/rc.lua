@@ -423,8 +423,15 @@ clientkeys = awful.util.table.join(
     awful.key(
         { modkey, "Shift"}, "c",
         function (c)
-            awful.client.floating.toggle()
+            c.floating = true
             awful.placement.centered()
+
+            c.width = c.screen.geometry.width / 2
+            c.height = c.screen.geometry.height / 2
+
+            c.x = c.screen.geometry.x + (c.screen.geometry.width / 4)
+            c.y = c.screen.geometry.height / 4
+
         end,
         {description = "toggle float and centered",
         group = "client"}
