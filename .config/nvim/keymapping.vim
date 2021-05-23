@@ -38,9 +38,6 @@ xmap <leader>rr "ry:%s/<C-r>r//g<left><left>
 " Put date
 nmap <leader>pd :put =strftime('%d.%m.%Y')<CR>
 
-" Put datetime
-nmap <leader>pd :put =strftime('%d.%m.%Y')<CR>
-
 " Put time
 nmap <leader>pt :put =strftime('%H:%M:%S')<CR>
 
@@ -48,7 +45,7 @@ nmap <leader>pt :put =strftime('%H:%M:%S')<CR>
 nnoremap H ^
 nnoremap L $
 
-" Basic vim 'H' and 'L' have replaced with alt+k and alt+j
+" Mapping alt+k, alt+j alt+m to H, L, M
 nnoremap <A-k> H
 nnoremap <A-j> L
 nnoremap <A-m> M
