@@ -8,7 +8,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 " File exporer
- Plug 'preservim/nerdtree'
+Plug 'preservim/nerdtree'
 
 " Icons for nerdtree
 " Plug 'ryanoasis/vim-devicons'
@@ -31,5 +31,16 @@ Plug 'preservim/nerdcommenter'
 
 " tsx highlight support
 Plug 'tasn/vim-tsx'
+
+" VimWiki
+Plug 'vimwiki/vimwiki'
+
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+
+" Tasks
+Plug 'crispydrone/vim-tasks'
+
 
 call plug#end()

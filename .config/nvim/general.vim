@@ -1,6 +1,11 @@
 " Leaderkey
 let mapleader = "\<Space>"
 
+set nocompatible
+filetype plugin on
+syntax on
+
+set nocompatible
 set hidden
 
 set encoding=UTF-8

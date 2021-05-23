@@ -11,8 +11,10 @@ source $HOME/.config/nvim/keymapping.vim
 source $HOME/.config/nvim/plugconf/gruvbox.vim
 source $HOME/.config/nvim/plugconf/vim-airline.vim
 source $HOME/.config/nvim/plugconf/tagbar.vim
-source $HOME/.config/nvim/plugconf/nerdtree.vim
 source $HOME/.config/nvim/plugconf/fzf.vim
 source $HOME/.config/nvim/plugconf/coc.vim
 source $HOME/.config/nvim/plugconf/nercommenter.vim
+source $HOME/.config/nvim/plugconf/vimwiki.vim
+source $HOME/.config/nvim/plugconf/telescope.vim
 
+au VimEnter * source $HOME/.config/nvim/plugconf/nerdtree.vim

@@ -131,7 +131,7 @@ mark h ~/
 " %m run the command in a menu window
 
 command! df df -h %m 2> /dev/null
-command! diff vim -d %f %F
+command! diff nvim -d %f %F
 command! zip zip -r %f.zip %f
 command! run !! ./%f
 command! make !!make %a
@@ -498,10 +498,20 @@ nnoremap <f6> :move<cr>
 nnoremap <f7> :mkdir<space>
 nnoremap <f8> :delete<cr>
 
-nmap <c-h> <c-w>h
+" Go to left, down, up, right window
 nmap <c-j> <c-w>j
 nmap <c-k> <c-w>k
 nmap <c-l> <c-w>l
+
+nmap <a-h> <c-w>h
+nmap <a-l> <c-w>l
+
+
+" Basic vim 'H' and 'L' have replaced with alt+k and alt+j
+nnoremap <A-k> H
+nnoremap <A-j> L
+nnoremap <A-m> M
+
 
 " ------------------------------------------------------------------------------
 

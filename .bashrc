@@ -113,6 +113,7 @@ alias vim='nvim'
 alias sd='sudo shutdown -h 120'
 
 alias vifm='vifmrun'
+alias vf='vifmrun'
 
 alias vevn='source ./venv/bin/activate'
 
@@ -146,10 +147,11 @@ export PATH="$HOME/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 # eval "$(pyenv virtualenv-init -)"
 
-#source /home/serega/.config/broot/launcher/bash/br
+# source /home/serega/.config/broot/launcher/bash/br
 # source /home/serega/.config/fzf/config.bash
 
 if [[ $(ps --no-header --pid=$PPID --format=cmd) != "fish" ]]
 then
 	exec fish
 fi
+source "$HOME/.cargo/env"

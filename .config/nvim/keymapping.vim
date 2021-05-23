@@ -38,6 +38,17 @@ xmap <leader>rr "ry:%s/<C-r>r//g<left><left>
 " Put date
 nmap <leader>pd :put =strftime('%d.%m.%Y')<CR>
 
+" Put datetime
+nmap <leader>pd :put =strftime('%d.%m.%Y')<CR>
+
 " Put time
 nmap <leader>pt :put =strftime('%H:%M:%S')<CR>
 
+" 'H' and 'L' go to first and last symbol in the line
+nnoremap H ^
+nnoremap L $
+
+" Basic vim 'H' and 'L' have replaced with alt+k and alt+j
+nnoremap <A-k> H
+nnoremap <A-j> L
+nnoremap <A-m> M
