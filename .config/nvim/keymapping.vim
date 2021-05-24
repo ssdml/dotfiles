@@ -45,6 +45,14 @@ nmap <leader>pt :put =strftime('%H:%M:%S')<CR>
 nnoremap H ^
 nnoremap L $
 
+" 'cH' and 'cL' change till first, change till last
+nnoremap cH c^
+nnoremap cL c$
+
+" 'dH' and 'dL' delete till first, delete till last
+nnoremap dH d^
+nnoremap dL d$
+
 " Mapping alt+k, alt+j alt+m to H, L, M
 nnoremap <A-k> H
 nnoremap <A-j> L
