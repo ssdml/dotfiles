@@ -5,8 +5,8 @@ nmap <leader>sou :source $HOME/.config/nvim/init.vim<CR>
 imap jj <Esc>
 
 " Prev, next buffers
-nmap <A-h> :bp<CR>
-nmap <A-l> :bn<CR>
+nmap H :bp<CR>
+nmap L :bn<CR>
 
 " Go to left, down, up, right window
 nmap <C-h> <C-w>h
@@ -41,19 +41,13 @@ nmap <leader>pd :put =strftime('%d.%m.%Y')<CR>
 " Put time
 nmap <leader>pt :put =strftime('%H:%M:%S')<CR>
 
-" 'H' and 'L' go to first and last symbol in the line
-nnoremap H ^
-nnoremap L $
+" 'alt+h' and 'alt+l' go to first and last symbol in the line
+nmap <A-h> ^
+nmap <A-l> $
+vmap <A-h> ^
+vmap <A-l> $
 
-" 'cH' and 'cL' change till first, change till last
-nnoremap cH c^
-nnoremap cL c$
-
-" 'dH' and 'dL' delete till first, delete till last
-nnoremap dH d^
-nnoremap dL d$
-
-" Mapping alt+k, alt+j alt+m to H, L, M
+" Mapping alt+k, alt+j alt+m to got to the top, bottom and middle of the screen
 nnoremap <A-k> H
 nnoremap <A-j> L
 nnoremap <A-m> M
