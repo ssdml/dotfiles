@@ -52,6 +52,7 @@ beautiful.border_width = 3
 -- terminal = "x-terminal-emulator"
 -- terminal = "st"
 terminal = "alacritty"
+
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -417,14 +418,13 @@ clientkeys = awful.util.table.join(
 --    awful.key({ modkey, "Shift"   }, "c", function (c) c:kill() end,
 --              {description = "close", group = "client"}),
 --
---    awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle,
---              {description = "toggle floating", group = "client"}),
+   awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle,
+             {description = "toggle floating", group = "client"}),
 
     awful.key(
         { modkey, "Shift"}, "c",
         function (c)
             c.floating = true
-            awful.placement.centered()
 
             c.width = c.screen.geometry.width / 2
             c.height = c.screen.geometry.height / 2
@@ -432,13 +432,21 @@ clientkeys = awful.util.table.join(
             c.x = c.screen.geometry.x + (c.screen.geometry.width / 4)
             c.y = c.screen.geometry.height / 4
 
+            awful.placement.centered()
+
         end,
         {description = "toggle float and centered",
         group = "client"}
     ),
 
-    awful.key( {modkey, }, "c", awful.client.floating.toggle,
-        {description = "toggle floating", group = "client"}
+    awful.key(
+        {modkey, },
+        "c",
+        function (c)
+            c.floating = true
+            awful.placement.centered()
+        end,
+        {description = "floating and centered", group = "client"}
     ),
 
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
