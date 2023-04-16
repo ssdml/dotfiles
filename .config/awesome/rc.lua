@@ -397,6 +397,8 @@ globalkeys = awful.util.table.join(
     -- Quitmenu
     awful.key({ modkey, "Control" }, "#127", function () awful.util.spawn_with_shell("/home/serega/bin/quitmenu") end,
               {description = "show the quitmenu", group = "launcher"}),
+    awful.key({ modkey, "Control" }, "#115", function () awful.util.spawn_with_shell("/home/serega/bin/quitmenu") end,
+              {description = "show the quitmenu", group = "launcher"}),
 
     -- Print screen
     awful.key({ }, "Print", function () awful.util.spawn({"flameshot", "gui"}) end),
@@ -418,7 +420,9 @@ clientkeys = awful.util.table.join(
 --    awful.key({ modkey, "Shift"   }, "c", function (c) c:kill() end,
 --              {description = "close", group = "client"}),
 --
-   awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle,
+   awful.key({ modkey,           }, "o",  awful.client.floating.toggle,
+             {description = "toggle floating", group = "client"}),
+   awful.key({ modkey,           }, "z",  awful.client.floating.toggle,
              {description = "toggle floating", group = "client"}),
 
     awful.key(
@@ -426,8 +430,8 @@ clientkeys = awful.util.table.join(
         function (c)
             c.floating = true
 
-            c.width = c.screen.geometry.width / 2
-            c.height = c.screen.geometry.height / 2
+            c.width = c.screen.geometry.width / 1.5
+            c.height = c.screen.geometry.height / 1.5
 
             c.x = c.screen.geometry.x + (c.screen.geometry.width / 4)
             c.y = c.screen.geometry.height / 4
@@ -451,7 +455,7 @@ clientkeys = awful.util.table.join(
 
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
-    awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
+    awful.key({ modkey,           }, "i",      function (c) c:move_to_screen()               end,
               {description = "move to screen", group = "client"}),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
               {description = "toggle keep on top", group = "client"}),
@@ -653,7 +657,11 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 --
 -- 
 
+-- Capslook do escape
 awful.util.spawn_with_shell("setxkbmap -option caps:escape")
-awful.util.spawn("google-chrome")
+-- Compton transparence of windows
 awful.util.spawn("compton")
+-- google-chrome
+awful.util.spawn_with_shell("pgrep chrome || google-chrome")
+
 
