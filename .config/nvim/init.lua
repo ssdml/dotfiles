@@ -13,6 +13,13 @@ require('config/telescope')
 -- [[ Nvim-tree config ]]
 require('config/nvimtree')
 
+-- [[ Aerial - Current buffer tag window ]]
+require('aerial').setup()
+vim.keymap.set('n', '<F1>', '<cmd>AerialToggle!<CR>', { noremap = true })
+
+require('notesclient')
+
+
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })

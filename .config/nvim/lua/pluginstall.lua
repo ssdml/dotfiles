@@ -76,7 +76,12 @@ require('packer').startup(function(use)
   use { 'nvim-tree/nvim-tree.lua' }
   use { 'nvim-tree/nvim-web-devicons' }
 
+
+  -- Color scheme gruvbox
   use { 'morhetz/gruvbox' }
+
+  -- Tags window
+  use { 'stevearc/aerial.nvim' }
 
   -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
   local has_plugins, plugins = pcall(require, 'custom.plugins')
