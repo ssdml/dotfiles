@@ -72,3 +72,7 @@ vim.keymap.set('v', '<A-l>','$')
 vim.keymap.set('n', '<A-k>', 'H')
 vim.keymap.set('n', '<A-j>', 'L')
 vim.keymap.set('n', '<A-m>', 'M')
+
+
+-- Terminal normal mode
+vim.keymap.set('t', '<C-\\>', '<C-\\><C-n>')

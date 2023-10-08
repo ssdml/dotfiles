@@ -11,16 +11,6 @@
 " If you would like to use another vi clone such as Elvis or Vile
 " you will need to change this setting.
 
-" VIEW CONFIG
-" Only padding on the left and rigth 
-set tuioptions=p
-
-" Transparent border
-highlight Border cterm=none ctermfg=none ctermbg=none
-
-" Border character
-set fillchars='vborder:│'
-
 set vicmd=nvim
 " set vicmd=elvis\ -G\ termcap
 " set vicmd=vile
@@ -181,106 +171,115 @@ command! reload :write | restart
 filextype *.pdf zathura %c %i &, apvlv %c, xpdf %c
 fileviewer *.pdf pdftotext -nopgbrk %c -
 
+" Ebooks
+
+" filextype *.epub,*.fb2 fbreader %c
+filextype *.epub,*.fb2 epy %c
+
+fileviewer *.epub
+    \ vifmimg epubpreview %px %py %pw %ph %c
+    \ %pc
+    \ vifmimg clear
+
 " PostScript
-filextype {*.ps,*.eps,*.ps.gz},<application/postscript>
+filextype *.ps,*.eps,*.ps.gz
         \ {View in zathura}
         \ zathura %f,
         \ {View in gv}
-        \ gv %c %i,
+        \ gv %c %i &,
+
 
 " Djvu
-filextype {*.djvu},<image/vnd.djvu>
+filextype *.djvu
         \ {View in zathura}
         \ zathura %f,
         \ {View in apvlv}
         \ apvlv %f,
 
-" Midi
-filetype {*.mid,*.kar}
-       \ {Play using TiMidity++}
-       \ timidity %f,
 
 " Audio
-filetype {*.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus,
-         \*.aac,*.mpga},
-        \<audio/*>
+filetype *.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus
+       \ {Play using ffplay}
+       \ ffplay -nodisp %c,
        \ {Play using MPlayer}
        \ mplayer %f,
-       \ {Play using mpv}
-       \ mpv --no-video %f %s,
-       \ {Play using ffplay}
-       \ ffplay -nodisp -hide_banner -autoexit %c,
-fileviewer {*.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus,
-           \*.aac,*.mpga},
-          \<audio/*>
-         \ ffprobe -hide_banner -pretty %c 2>&1
+fileviewer *.mp3 mp3info
+fileviewer *.flac soxi
+fileviewer <audio/*>
+    \ vifmimg audio %px %py %pw %ph %c
+    \ %pc
+    \ vifmimg clear
+
 
 " Video
-filextype {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
-          \*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
-          \*.as[fx],*.unknown_video},
-         \<video/*>
-        \ {View using ffplay}
-        \ ffplay -fs -hide_banner -autoexit %f,
-        \ {View using Dragon}
+filextype *.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
+         \*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
+         \*.as[fx]
+        \ {view using ffplay}
+        \ ffplay -fs %f,
+        \ {view using dragon}
         \ dragon %f:p,
-        \ {View using mplayer}
+        \ {view using mplayer}
         \ mplayer %f,
-        \ {Play using mpv}
-        \ mpv --no-video %f,
-fileviewer {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
-           \*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
-           \*.as[fx],*.unknown_video},
-          \<video/*>
-         \ ffprobe -hide_banner -pretty %c 2>&1
+fileviewer *.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
+    \*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
+    \ vifmimg videopreview %px %py %pw %ph %c
+    \ %pc
+    \ vifmimg clear
+
 
 " Web
-filextype {*.xhtml,*.html,*.htm},<text/html>
-        \ {Open with qutebrowser}
-        \ qutebrowser %f %i,
+filextype *.html,*.htm
+        \ {Open with dwb}
+        \ dwb %f %i &,
         \ {Open with firefox}
         \ firefox %f &,
-filetype {*.xhtml,*.html,*.htm},<text/html> links, lynx
+        \ {Open with uzbl}
+        \ uzbl-browser %f %i &,
+filetype *.html,*.htm links, lynx
+
 
 " Object
-filetype {*.o},<application/x-object> nm %f | less
+filetype *.o nm %f | less
+
 
 " Man page
-filetype {*.[1-8]},<text/troff> man ./%c
-fileviewer {*.[1-8]},<text/troff> man ./%c | col -b
+filetype *.[1-8] man ./%c
+fileviewer *.[1-8] man ./%c | col -b
 
-" Images
-filextype {*.svg,*.svgz},<image/svg+xml>
-        \ {Edit in Inkscape}
-        \ inkscape %f,
-        \ {View in Inkview}
-        \ inkview %f,
-filextype {*.cr2}
-        \ {Open in Darktable}
-        \ darktable %f,
-        \ {Open in RawTherapee}
-        \ rawtherapee %f,
-filextype {*.xcf}
-        \ {Open in GIMP}
-        \ gimp %f,
-filextype {*.kra}
-        \ {Open in Krita}
-        \ krita %f,
-filextype {*.blend}
-        \ {Open in Blender}
-        \ blender %c,
-filextype {*.sh3d}
-        \ {Open in Sweet Home 3D}
-        \ sweethome3d %c:p,
-filextype {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
-        \ {View in sxiv}
-        \ sxiv %f,
-        \ {View in gpicview}
-        \ gpicview %c,
-        \ {View in shotwell}
-        \ shotwell,
-fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
-         \ identify %f
+
+" Pictures
+filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
+       \ {View in gpicview}
+       \ gpicview %c,
+       \ {View in sxiv}
+       \ sxiv,
+       \ {View in shotwell}
+       \ shotwell,
+fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.xpm
+    \ vifmimg draw %px %py %pw %ph %c
+    \ %pc
+    \ vifmimg clear
+
+fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
+         \ imgt.sh %px %py %pw %ph %c
+
+
+" Pictures
+" fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.xpm
+"       \ kitty +kitten icat --transfer-mode=file --place=1x1@%pxx%py %c
+"      \ %pc
+"     \ kitty +kitten icat --clear
+
+fileviewer *.gif
+    \ vifmimg gifpreview %px %py %pw %ph %c
+    \ %pc
+    \ vifmimg clear
+fileviewer *.ico
+    \ vifmimg magickpreview %px %py %pw %ph %c
+    \ %pc
+    \ vifmimg clear
+
 
 " OpenRaster
 filextype *.ora
@@ -313,126 +312,59 @@ filetype *.sha512
        \ sha512sum -c %f %S,
 
 " GPG signature
-filetype {*.asc},<application/pgp-signature>
+filetype *.asc
        \ {Check signature}
        \ !!gpg --verify %c,
 
 " Torrent
-filetype {*.torrent},<application/x-bittorrent> ktorrent %f &
-fileviewer {*.torrent},<application/x-bittorrent>
-         \ dumptorrent -v %c,
-         \ transmission-show %c
+filetype *.torrent ktorrent %f &
+fileviewer *.torrent dumptorrent -v %c
 
 " FuseZipMount
-filetype {*.zip,*.jar,*.war,*.ear,*.oxt,*.apkg},
-        \<application/zip,application/java-archive>
+filetype *.zip,*.jar,*.war,*.ear,*.oxt,*.apkg
        \ {Mount with fuse-zip}
        \ FUSE_MOUNT|fuse-zip %SOURCE_FILE %DESTINATION_DIR,
        \ {View contents}
-       \ unzip -l %f | less,
+       \ zip -sf %c | less,
        \ {Extract here}
-       \ unzip %c,
-fileviewer *.zip,*.jar,*.war,*.ear,*.oxt unzip -l %f
+       \ tar -xf %c,
+fileviewer *.zip,*.jar,*.war,*.ear,*.oxt zip -sf %c
 
 " ArchiveMount
-filetype {*.cpio,*.cpio.gz,*.rpm,*.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,
-         \*.txz,*.tar.zst,*.tzst},
-        \<application/x-cpio,application/x-rpm,application/x-tar>
+filetype *.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,*.txz
        \ {Mount with archivemount}
        \ FUSE_MOUNT|archivemount %SOURCE_FILE %DESTINATION_DIR,
 fileviewer *.tgz,*.tar.gz tar -tzf %c
 fileviewer *.tar.bz2,*.tbz2 tar -tjf %c
-fileviewer *.tar.xz,*.txz tar -tJf %c
-fileviewer *.tar.zst,*.tzst tar -t --zstd -f %c
-fileviewer {*.tar},<application/x-tar> tar -tf %c
-fileviewer {*.cpio},<application/x-cpio> cpio -t < %c
-fileviewer {*.rpm},<application/x-rpm> rpm -q --list %c%q 2> /dev/null
+fileviewer *.tar.txz,*.txz xz --list %c
+fileviewer *.tar tar -tf %c
 
 " Rar2FsMount and rar archives
-filetype {*.rar},<application/x-rar>
+filetype *.rar
        \ {Mount with rar2fs}
        \ FUSE_MOUNT|rar2fs %SOURCE_FILE %DESTINATION_DIR,
-fileviewer {*.rar},<application/x-rar> unrar v %c
+fileviewer *.rar unrar v %c
 
 " IsoMount
-filetype {*.iso},<application/x-iso9660-image>
+filetype *.iso
        \ {Mount with fuseiso}
        \ FUSE_MOUNT|fuseiso %SOURCE_FILE %DESTINATION_DIR,
 
 " SshMount
 filetype *.ssh
        \ {Mount with sshfs}
-       \ FUSE_MOUNT2|sshfs %PARAM %DESTINATION_DIR %FOREGROUND,
+       \ FUSE_MOUNT2|sshfs %PARAM %DESTINATION_DIR,
 
 " FtpMount
 filetype *.ftp
        \ {Mount with curlftpfs}
-       \ FUSE_MOUNT2|curlftpfs -o ftp_port=-,,disable_eprt %PARAM %DESTINATION_DIR %FOREGROUND,
+       \ FUSE_MOUNT2|curlftpfs -o ftp_port=-,,disable_eprt %PARAM %DESTINATION_DIR,
 
 " Fuse7z and 7z archives
-filetype {*.7z},<application/x-7z-compressed>
+filetype *.7z
        \ {Mount with fuse-7z}
        \ FUSE_MOUNT|fuse-7z %SOURCE_FILE %DESTINATION_DIR,
-fileviewer {*.7z},<application/x-7z-compressed> 7z l %c
-
-" Office files
-filextype {*.odt,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.pptx,*.ppt},
-         \<application/vnd.openxmlformats-officedocument.*,
-          \application/msword,
-          \application/vnd.ms-excel>
-        \ libreoffice %f &
-fileviewer {*.doc},<application/msword> catdoc %c
-fileviewer {*.docx},
-          \<application/
-           \vnd.openxmlformats-officedocument.wordprocessingml.document>
-         \ docx2txt.pl %f -
-
-" TuDu files
-filetype *.tudu tudu -f %c
-
-" Qt projects
-filextype *.pro qtcreator %f &
-
-" Directories
-filextype */
-        \ {View in thunar}
-        \ Thunar %f &,
-
-" Ebooks
-filextype *.epub,*.fb2 epy %c
-fileviewer *.epub
-    \ vifmimg epubpreview %px %py %pw %ph %c
-    \ %pc
-    \ vifmimg clear
-
-" Man page
-filetype *.[1-8] man ./%c
-fileviewer *.[1-8] man ./%c | col -b
-
-" MD5
-filetype *.md5
-       \ {Check MD5 hash sum}
-       \ md5sum -c %f %S,
-
-" SHA1
-filetype *.sha1
-       \ {Check SHA1 hash sum}
-       \ sha1sum -c %f %S,
-
-" SHA256
-filetype *.sha256
-       \ {Check SHA256 hash sum}
-       \ sha256sum -c %f %S,
-
-" SHA512
-filetype *.sha512
-       \ {Check SHA512 hash sum}
-       \ sha512sum -c %f %S,
-
-" GPG signature
-filetype *.asc
-       \ {Check signature}
-       \ !!gpg --verify %c,
+fileviewer *.7z 7z l %c
 
 " Fonts
 fileviewer <font/*>
@@ -440,7 +372,14 @@ fileviewer <font/*>
     \ %pc
     \ vifmimg clear
 
+" Office files
+filextype *.odt,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.pptx libreoffice %f &
+fileviewer *.doc catdoc %c
+fileviewer *.docx, docx2txt.pl %f -
+
+
 fileviewer *.py,*.js,*.jsx,*.html,*.css,*.md env -uCOLORTERM batcat --wrap auto --theme=gruvbox-dark --color always --pager never %c -p
+
 
 " TuDu files
 filetype *.tudu tudu -f %c

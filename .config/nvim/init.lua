@@ -15,9 +15,14 @@ require('config/nvimtree')
 
 -- [[ Aerial - Current buffer tag window ]]
 require('aerial').setup()
-vim.keymap.set('n', '<F1>', '<cmd>AerialToggle!<CR>', { noremap = true })
 
-require('notesclient')
+vim.keymap.set('n', '<F1>', '<cmd>AerialToggle!<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>t', '<cmd>AerialOpen<CR>', { noremap = true })
+
+require('notesclient_prod').setup({
+        MODULE_NAME = 'notesclient_prod',
+        SERVER_HOST = 'https://94.198.218.24:443',
+})
 
 
 -- [[ Highlight on yank ]]

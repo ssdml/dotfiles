@@ -44,9 +44,25 @@ end
 beautiful.init(awful.util.get_themes_dir() .. "default/theme.lua")
 
 -- Gaps and borders
-beautiful.border_width = 3
+beautiful.border_width = 2
 -- beautiful.border_normal = "#cecece00"
--- beautiful.useless_gap = 2
+beautiful.useless_gap = 2
+
+-- Border radius
+client.connect_signal("manage", function (c)
+    c.shape = gears.shape.rounded_rect
+end)
+
+-- Remove border radius if window is maximized
+local function change_shape(c, field)
+    if c[field] then
+        c.shape = gears.shape.rectangle
+    else
+        c.shape = gears.shape.rounded_rect
+    end
+end
+client.connect_signal("property::maximized", function (c) change_shape(c, 'maximized') end)
+client.connect_signal("property::fullscreen", function (c) change_shape(c, 'fullscreen') end)
 
 -- This is used later as the default terminal and editor to run.
 -- terminal = "x-terminal-emulator"
@@ -65,23 +81,23 @@ modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
+    awful.layout.suit.spiral.dwindle,
     awful.layout.suit.fair,
-    awful.layout.suit.floating,
+
+--    awful.layout.suit.floating,
+--    awful.layout.suit.max,
 --    awful.layout.suit.tile,
---     awful.layout.suit.tile.left,
---     awful.layout.suit.tile.bottom,
---     awful.layout.suit.tile.top,
---
-     awful.layout.suit.fair.horizontal,
---     awful.layout.suit.spiral,
---     awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.max,
---     awful.layout.suit.max.fullscreen,
---     awful.layout.suit.magnifier,
---     awful.layout.suit.corner.nw,
---     awful.layout.suit.corner.ne,
---     awful.layout.suit.corner.sw,
---     awful.layout.suit.corner.se,
+--    awful.layout.suit.tile.left,
+--    awful.layout.suit.tile.bottom,
+--    awful.layout.suit.tile.top,
+--    awful.layout.suit.spiral,
+--    awful.layout.suit.max.fullscreen,
+--    awful.layout.suit.magnifier,
+--    awful.layout.suit.corner.nw,
+--    awful.layout.suit.corner.ne,
+--    awful.layout.suit.corner.sw,
+--    awful.layout.suit.corner.se,
+
 }
 -- }}}
 
@@ -116,8 +132,8 @@ mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesom
                                   }
                         })
 
-mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
-                                     menu = mymainmenu })
+-- mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
+--                                      menu = mymainmenu })
 
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
@@ -247,7 +263,7 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- Calendar
     local calendar = require("calendar")
-    calendar_widget = calendar({
+    local calendar_widget = calendar({
        position = "bottom_right",
     })
     calendar_widget:attach(mytextclock)
@@ -259,7 +275,7 @@ awful.screen.connect_for_each_screen(function(s)
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            mylauncher,
+            -- mylauncher,
             s.mytaglist,
             s.mypromptbox,
         },
@@ -284,15 +300,26 @@ root.buttons(awful.util.table.join(
 -- }}}
 
 -- {{{ Key bindings
+
+local restore_window = function ()
+    local c = awful.client.restore()
+    -- Focus restored client
+    if c then
+        client.focus = c
+        c:raise()
+    end
+end
+
+
 globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
-              {description="show help", group="awesome"}),
+        {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
-              {description = "view previous", group = "tag"}),
+        {description = "view previous", group = "tag"}),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
-              {description = "view next", group = "tag"}),
+        {description = "view next", group = "tag"}),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
-              {description = "go back", group = "tag"}),
+        {description = "go back", group = "tag"}),
 
     awful.key({ modkey,           }, "j",
         function ()
@@ -323,14 +350,24 @@ globalkeys = awful.util.table.join(
               {description = "focus the previous screen", group = "screen"}),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
               {description = "jump to urgent client", group = "client"}),
+
     awful.key({ modkey,           }, "Tab",
-        function ()
-            awful.client.focus.history.previous()
-            if client.focus then
-                client.focus:raise()
-            end
-        end,
+        function () awful.client.focus.byidx( 1) end,
         {description = "go back", group = "client"}),
+
+    awful.key({ modkey, "Shift"}, "Tab",
+        function () awful.client.focus.byidx(-1) end,
+        {description = "go back", group = "client"}),
+
+
+    -- awful.key({ modkey,           }, "Tab",
+    --     function ()
+    --         awful.client.focus.history.previous()
+    --         if client.focus then
+    --             client.focus:raise()
+    --         end
+    --     end,
+    --     {description = "go back", group = "client"}),
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
@@ -361,16 +398,8 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
               {description = "select previous", group = "layout"}),
 
-    awful.key({ modkey, "Control" }, "n",
-              function ()
-                  local c = awful.client.restore()
-                  -- Focus restored client
-                  if c then
-                      client.focus = c
-                      c:raise()
-                  end
-              end,
-              {description = "restore minimized", group = "client"}),
+    awful.key({ modkey, "Shift" }, "n", restore_window, {description = "restore minimized", group = "client"}),
+    awful.key({ modkey, "Control" }, "n", restore_window, {description = "restore minimized", group = "client"}),
 
     -- Prompt
     -- awful.key({ modkey },            "r",     function () awful.screen.focused().mypromptbox:run() end,
@@ -395,9 +424,9 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "p", function() awful.util.spawn_with_shell("rofi -show drun") end,
               {description = "show the menubar", group = "launcher"}),
     -- Quitmenu
-    awful.key({ modkey, "Control" }, "#127", function () awful.util.spawn_with_shell("/home/serega/bin/quitmenu") end,
+    awful.key({ modkey, "Control" }, "#127", function () awful.util.spawn_with_shell("/home/serega/.local/bin/quitmenu") end,
               {description = "show the quitmenu", group = "launcher"}),
-    awful.key({ modkey, "Control" }, "#115", function () awful.util.spawn_with_shell("/home/serega/bin/quitmenu") end,
+    awful.key({ modkey, "Control" }, "#115", function () awful.util.spawn_with_shell("/home/serega/.local/bin/quitmenu") end,
               {description = "show the quitmenu", group = "launcher"}),
 
     -- Print screen
@@ -447,8 +476,12 @@ clientkeys = awful.util.table.join(
         {modkey, },
         "c",
         function (c)
-            c.floating = true
-            awful.placement.centered()
+            if c.floating then
+                c.floating = false
+            else
+                c.floating = true
+                awful.placement.centered()
+            end
         end,
         {description = "floating and centered", group = "client"}
     ),
@@ -583,6 +616,7 @@ awful.rules.rules = {
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },
+
 }
 -- }}}
 
@@ -654,8 +688,6 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
---
--- 
 
 -- Capslook do escape
 awful.util.spawn_with_shell("setxkbmap -option caps:escape")
@@ -665,3 +697,4 @@ awful.util.spawn("compton")
 awful.util.spawn_with_shell("pgrep chrome || google-chrome")
 
 
+awful.util.spawn_with_shell("$HOME/.config/awesome./autorun.sh")
