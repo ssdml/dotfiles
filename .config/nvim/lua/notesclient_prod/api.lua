@@ -20,38 +20,64 @@ local save_text_url = host .. '/api/v1/textmode/parse/'
 
 local login_api_url = host .. '/api/v1/login/'
 
-local session_file_path = debug.getinfo(1).source:match("@?(.*/)") .. 'z_session.txt'
+local config_path = NC_CONFIG_PATH
 
 
-local function read_from_session_file()
-    local session_file = io.open(session_file_path, 'r')
+local function read_config()
+    local config_file = io.open(config_path, 'r')
 
-    if session_file ~= nil then
-        local cookie_session = session_file:read()
-        session_file:close()
-        return cookie_session
+    local config_content
+
+    if config_file ~= nil then
+        config_content = config_file:read('*all')
+        config_file:close()
     end
 
-    return nil
+	local ok, config = pcall(vim.fn.json_decode, config_content)
+	if not ok then
+		return {}
+	end
+
+    return config
 end
 
 
-local function write_to_session_file(cookie_session)
-        if cookie_session == nil then
-            return
-        end
+local function store_config(config)
+    local config_file = io.open(config_path, 'w')
+    if config_file ~= nil then
+        config_file:write(vim.fn.json_encode(config))
+        config_file:close()
+    end
+end
 
-        local session_file = io.open(session_file_path, 'w')
-        if session_file then
-            session_file:write(cookie_session)
-            session_file:close()
-        end
+
+local function read_session()
+    local config = read_config()
+
+    if config == nil then
+        return nil
+    end
+
+    return config['session']
+end
+
+
+local function store_session(cookie_session)
+    if cookie_session == nil then
+        return
+    end
+
+    local config = read_config()
+
+    config['session'] = cookie_session
+
+    store_config(config)
 end
 
 
 local api = {}
 
-api.cookie_session = read_from_session_file()
+api.cookie_session = read_session()
 
 local function make_json_request(url, method, params)
     local params_string = json.stringify(params)
@@ -212,7 +238,7 @@ function api.login(login, password)
     if cookie_session then
         api.cookie_session = cookie_session
 
-        write_to_session_file(cookie_session)
+        store_session(cookie_session)
     end
 
     if code ~= 200 then

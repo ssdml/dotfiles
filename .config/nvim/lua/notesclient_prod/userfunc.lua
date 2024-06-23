@@ -23,7 +23,7 @@ end
 
 
 function M._parse_entity_line(line)
-    local entity_type, entity_id = string.match(line, '^%s*@(%a+)%((%d+)%)')
+    local entity_type, entity_id = string.match(line, '^%s*@(%a+):.*|%s*id=(%d+)$')
 
     if entity_type ~= nil then
 
@@ -52,14 +52,30 @@ function M._parse_entity_line(line)
 end
 
 
-function M._show_item(item_id, buf_name, fetch_func)
+function M._show_item(item_id, input_buf_name, fetch_func)
+
+    local item_json = fetch_func(item_id)
+
+    local fetched_buf_name = item_json['name']
+
+    local buf_name
+    if input_buf_name then
+        buf_name = input_buf_name
+
+    elseif fetched_buf_name then
+        buf_name = fetched_buf_name
+
+    else
+        message("Couldn't get buf_name")
+        return
+    end
+
+    -- TODO: make better buffer find finction. Use another aproach to compare names
     local buf = display.find_buf_by_name(buf_name)
 
     if M._check_buf_modifired(buf) then
         return
     end
-
-    local item_json = fetch_func(item_id)
 
     if item_json == nil then
         message('Error loading item with id = ' .. item_id .. ' to buf "' .. buf_name .. '"')
@@ -109,19 +125,26 @@ function M.show_today_by_date(cmd_params)
         today = os.date('%d.%m.%Y')
     end
 
-    M._show_item(today, 'today_' .. tostring(today), api.get_today_by_date)
+    M._show_item(today, nil, api.get_today_by_date)
 end
 
 function M.show_today(opts)
     local today_id = opts.args
-    M._show_item(today_id, 'today_' .. tostring(today_id), api.get_today)
+    M._show_item(today_id, nil, api.get_today)
 end
 
 
 function M.show_note(opts)
     local note_id = opts.args
 
-    M._show_item(note_id, 'note_' .. tostring(note_id), api.get_note)
+    M._show_item(note_id, nil, api.get_note)
+end
+
+
+function M.show_todo(opts)
+    local todo_id = opts.args
+
+    M._show_item(todo_id, nil, api.get_todo)
 end
 
 
@@ -150,15 +173,8 @@ function M.new_todo()
 end
 
 
-function M.show_todo(opts)
-    local todo_id = opts.args
-
-    M._show_item(todo_id, 'todo_' .. tostring(todo_id), api.get_todo)
-end
-
-
 function M.list_todos()
-    local fetched = api.get_todos({only_root = true})
+    local fetched = api.get_todos({})
     _show_fetched(fetched, 'Error listing todos')
 end
 
@@ -176,8 +192,8 @@ end
 
 
 function M.open_under_cursor()
-    if vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), 'filetype') ~= 'notetake' then
-        return
+    if vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), 'filetype') ~= NC_FILETYPE then
+        return true
     end
 
     local entity_type, entity_id = M._parse_entity_line(vim.api.nvim_get_current_line())
@@ -200,6 +216,10 @@ end
 
 function M.save_text_entity(event_data)
     local buf_num =  event_data['buf']
+
+    if vim.api.nvim_buf_get_option(buf_num, 'filetype') ~= NC_FILETYPE then
+        return true
+    end
 
     if not vim.api.nvim_buf_get_option(buf_num, 'modifiable') then
         return
@@ -230,14 +250,19 @@ function M.save_text_entity(event_data)
 
     vim.api.nvim_buf_set_lines(buf_num, 0, -1, false, new_buf_lines)
 
-    local buf_name = api_result['type'] .. '_'
+    local buf_name = api_result['name']
 
-    if api_result['type'] == 'today' then
-        buf_name = buf_name .. tostring(api_result['date']) .. '.takenote'
-    else
-        buf_name = buf_name .. tostring(api_result['id']) .. '.takenote'
+    if buf_name == nil then
+        -- TODO: get rid of this code if api_result['name'] works well
+        buf_name = api_result['type'] .. '_'
+        if api_result['type'] == 'today' then
+            buf_name = buf_name .. tostring(api_result['date'])
+        else
+            buf_name = buf_name .. tostring(api_result['id'])
+        end
 
     end
+
 
     vim.api.nvim_buf_set_name(buf_num, buf_name)
 

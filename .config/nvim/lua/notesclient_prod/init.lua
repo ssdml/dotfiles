@@ -1,12 +1,25 @@
 local M = {}
 
+NC_FILETYPE = 'notetake'
+
 function M.setup(options)
+
+    NC_MODULE_NAME = 'notesclient'
+    NC_SERVER_HOST = 'http://127.0.0.1:5000'
+    NC_CONFIG_PATH = vim.fn.stdpath("cache") .. "/znotesclientconfig.json"
+
     if options then
-        NC_MODULE_NAME = options.MODULE_NAME
-        NC_SERVER_HOST = options.SERVER_HOST
-    else
-        NC_MODULE_NAME = 'notesclient'
-        NC_SERVER_HOST = 'https://94.198.218.24:80'
+        if options.MODULE_NAME ~= nil then
+            NC_MODULE_NAME = options.MODULE_NAME
+        end
+
+        if options.SERVER_HOST ~= nil then
+            NC_SERVER_HOST = options.SERVER_HOST
+        end
+
+        if options.CONFIG_PATH then
+            NC_CONFIG_PATH = options.CONFIG_PATH
+        end
     end
 
 
@@ -15,11 +28,9 @@ function M.setup(options)
     local cmd_prx = 'Z'  -- [Z]apisi
 
 
-    local file_pattern = '*.takenote'
-
     vim.api.nvim_create_autocmd(
         {'BufWriteCmd'},
-        {pattern = file_pattern, callback = usrf.save_text_entity}
+        {callback = usrf.save_text_entity}
     )
 
 
@@ -40,7 +51,8 @@ function M.setup(options)
     vim.api.nvim_create_user_command(cmd_prx .. 'Login', usrf.login, {})
 
     vim.api.nvim_create_user_command(cmd_prx .. 'OpenUnderCursor', usrf.open_under_cursor, {})
-    -- vim.api.nvim_set_keymap('n', '<Enter>', ':' .. cmd_prx .. 'OpenUnderCursor<CR>', {noremap = false})
+
+    vim.cmd('autocmd FileType ' .. NC_FILETYPE .. ' :noremap <buffer> <Enter> ' .. ':' .. cmd_prx .. 'OpenUnderCursor<CR>')
 
 
     vim.api.nvim_create_user_command(cmd_prx .. 'Unfold', usrf.unfold_entity, {})

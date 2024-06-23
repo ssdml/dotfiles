@@ -3,11 +3,12 @@ return {
     event = 'InsertEnter',
     dependencies = {
         'hrsh7th/cmp-buffer', -- source for text in buffer
-        'hrsh7th/cmp-path', -- source for file system paths
+        'hrsh7th/cmp-path',   -- source for file system paths
         'neovim/nvim-lspconfig',
         'hrsh7th/cmp-nvim-lsp',
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
+        'Exafunction/codeium.nvim',
 
         {
             'L3MON4D3/LuaSnip',
@@ -34,17 +35,17 @@ return {
             completion = {
                 completeopt = 'menu,menuone,preview,noselect',
             },
-            snippet = { -- configure how nvim-cmp interacts with snippet engine
+            snippet = {
+                        -- configure how nvim-cmp interacts with snippet engine
                 expand = function(args)
                     luasnip.lsp_expand(args.body)
                 end,
             },
             mapping = cmp.mapping.preset.insert({
+                ['<C-j>'] = cmp.mapping.select_next_item(),   -- next suggestion
+                ['<C-k>'] = cmp.mapping.select_prev_item(),   -- previous suggestion
 
-                ['<C-j>'] = cmp.mapping.select_next_item(), -- next suggestion
-                ['<C-k>'] = cmp.mapping.select_prev_item(), -- previous suggestion
-
-                ['<Tab>'] = cmp.mapping.select_next_item(), -- next suggestion
+                ['<Tab>'] = cmp.mapping.select_next_item(),   -- next suggestion
                 ['<S-Tab>'] = cmp.mapping.select_prev_item(), -- previous suggestion
 
                 ['<C-b>'] = cmp.mapping.scroll_docs(-4),
@@ -52,16 +53,17 @@ return {
 
                 ['<C-Space>'] = cmp.mapping.complete(), -- show completion suggestions
 
-                ['<C-e>'] = cmp.mapping.abort(), -- close completion window
+                ['<C-e>'] = cmp.mapping.abort(),        -- close completion window
 
                 ['<CR>'] = cmp.mapping.confirm({ select = true }),
             }),
             -- sources for autocompletion
             sources = cmp.config.sources({
-                { name = 'nvim_lsp'},
-                { name = 'path' }, -- file system paths
-                { name = 'buffer' }, -- text within current buffer
+                { name = 'nvim_lsp' },
+                { name = 'path' },    -- file system paths
+                { name = 'buffer' },  -- text within current buffer
                 { name = 'luasnip' }, -- snippets
+                { name = 'codeium' }  -- Codeium AI
             }),
 
             -- configure lspkind for vs-code like pictograms in completion menu
@@ -87,7 +89,7 @@ return {
         local capabilities = vim.lsp.protocol.make_client_capabilities()
         capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
-        mason_lspconfig.setup_handlers{
+        mason_lspconfig.setup_handlers {
             function(server_name)
                 require('lspconfig')[server_name].setup({
                     capabilities = capabilities,
@@ -100,7 +102,6 @@ return {
             end,
 
         }
-
     end,
 }
 

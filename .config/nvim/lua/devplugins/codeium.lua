@@ -1,0 +1,1 @@
+/home/serega/.config/nvim/lua/allplugins/codeium.lua

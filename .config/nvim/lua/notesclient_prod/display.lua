@@ -14,19 +14,15 @@ end
 
 local M = {}
 
-function M.find_buf_by_name(name)
-    if name == nil then
-        return nil
-    end
+M.counter = 0
 
-    local pattern = name .. '%.%a+$'
-
+function M.find_buf_by_match(match_function)
     for _, cur_buf in ipairs(vim.api.nvim_list_bufs()) do
         if vim.api.nvim_buf_is_loaded(cur_buf) then
 
             local cur_buf_name = vim.api.nvim_buf_get_name(cur_buf)
 
-            if string.match(cur_buf_name, pattern) then
+            if match_function(cur_buf_name) then
                 return cur_buf
             end
         end
@@ -35,19 +31,39 @@ function M.find_buf_by_name(name)
     return nil
 end
 
+function M.find_buf_by_name(name)
+    if name == nil then
+        return nil
+    end
 
-M.counter = 0
+    local match_function = function (current_name)
+        return current_name:sub(-#name) == name
+    end
+
+    local extracted_id = string.match(name, '|%s*id=(%d+)[^|]*$')
+    if extracted_id then
+        local pattern = '|%s*id=' .. extracted_id .. '[^|]*$'
+
+        match_function = function (current_name)
+            return string.match(current_name, pattern)
+        end
+    end
+
+    return M.find_buf_by_match(match_function)
+end
+
+
 
 function M.init_buf_by_name(file_name)
     local buf
     if file_name == nil then
 
         M.counter = M.counter + 1
-        buf = M.create_buffer('item_' .. M.counter .. '.takenote')
+        buf = M.create_buffer('takenote item ' .. M.counter)
 
     else
         if buf == nil then
-            buf = M.create_buffer(file_name .. '.takenote')
+            buf = M.create_buffer(file_name)
         end
     end
 
@@ -59,7 +75,7 @@ function M.create_buffer(name)
     vim.api.nvim_buf_set_name(buf, name)
     vim.api.nvim_buf_set_option(buf, "buftype", "")
     vim.api.nvim_buf_set_option(buf, "modified", false)
-    vim.api.nvim_buf_set_option(buf, "filetype", "notetake")
+    vim.api.nvim_buf_set_option(buf, "filetype", NC_FILETYPE)
 
     return buf
 end
