@@ -1,11 +1,14 @@
 # My scripts
-PATH="$HOME/bin/:$PATH"
+PATH="$HOME/.local/bin/:$PATH"
 
 # no machine bins
 PATH=$PATH:/usr/NX/bin/
 
 # my bin
 PATH=$PATH:$HOME/bin/
+
+# neovim
+export PATH="$PATH:/opt/nvim-linux64/bin"
 
 # Editor
 export EDITOR="nvim"
