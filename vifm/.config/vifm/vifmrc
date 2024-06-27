@@ -440,7 +440,8 @@ fileviewer <font/*>
     \ %pc
     \ vifmimg clear
 
-fileviewer *.py,*.js,*.jsx,*.html,*.css,*.md env -uCOLORTERM batcat --wrap auto --theme=gruvbox-dark --color always --pager never %c -p
+fileviewer *.py,*.js,*.jsx,*.html,*.css,*.md,*.lua env -uCOLORTERM batcat --wrap auto --theme=gruvbox-dark --color always --pager never %c -p
+fileviewer *.json jq -C . %c
 
 " TuDu files
 filetype *.tudu tudu -f %c
@@ -567,6 +568,9 @@ nmap <c-l> <c-w>l
 
 nmap <a-h> <c-w>h
 nmap <a-l> <c-w>l
+
+" Toggle dotfiles
+nnoremap g. :set dotfiles!<CR>
 
 
 " Basic vim 'H' and 'L' have replaced with alt+k and alt+j

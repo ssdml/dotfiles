@@ -3,7 +3,8 @@ from pathlib import Path
 IGNORED_DIRS = {'.git',}
 IGNORED_FILES = {'.gitignore', 'mklinks.py'}
 
-i = 0
+DOT_FILES_DIR = Path.home() / Path("Dotfiles")
+
 
 def create_symlinks(source_dir: Path, target_dir: Path):
     """
@@ -29,8 +30,9 @@ def create_symlinks(source_dir: Path, target_dir: Path):
                 print(f"Error creating symlink for {item}: {e}")
 
 if __name__ == "__main__":
-    # Replace these with your actual paths
-    source_dir = Path.home() / Path("Dotfiles")
     target_dir = Path.home()
 
-    create_symlinks(source_dir, target_dir)
+    dirs = [item for item in DOT_FILES_DIR.iterdir() if item.is_dir() and not item.name.startswith('.')]
+
+    for dir in dirs:
+        create_symlinks(dir, target_dir)

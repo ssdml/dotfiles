@@ -89,7 +89,7 @@ xterm*|rxvt*)
     ;;
 esac
 
-# enable color support of ls and also add handy aliases
+# enable color support of ls and also add handy liases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
@@ -110,6 +110,7 @@ alias ll='ls -l'
 alias la='ls -A'
 
 alias vim='nvim'
+alias dev='nvim -u "$HOME/.config/nvim/init.dev.lua"'
 
 #alias l='ls -CF'
 
@@ -117,6 +118,8 @@ alias sd='sudo shutdown -h 120'
 
 alias vifm='vifmrun'
 alias vf='vifmrun'
+
+alias fd='fdfind'
 
 alias vevn='source ./venv/bin/activate'
 

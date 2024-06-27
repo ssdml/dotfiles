@@ -697,4 +697,5 @@ awful.util.spawn("compton")
 awful.util.spawn_with_shell("pgrep chrome || google-chrome")
 
 
-awful.util.spawn_with_shell("$HOME/.config/awesome./autorun.sh")
+awful.util.spawn_with_shell("$HOME/.config/awesome/autorun.sh")
+
