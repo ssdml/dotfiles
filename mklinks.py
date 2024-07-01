@@ -27,12 +27,32 @@ def create_symlinks(source_dir: Path, target_dir: Path):
                 target_path.symlink_to(item)
                 print(f"Created symlink: {target_path} -> {item}")
             except OSError as e:
-                print(f"Error creating symlink for {item}: {e}")
+                pass
+                # print(f"Error creating symlink for {item}: {e}")
 
 if __name__ == "__main__":
     target_dir = Path.home()
 
     dirs = [item for item in DOT_FILES_DIR.iterdir() if item.is_dir() and not item.name.startswith('.')]
 
-    for dir in dirs:
-        create_symlinks(dir, target_dir)
+    for index, dir in enumerate(dirs, start=1):
+        print(f'{index}. {dir.name}')
+
+    print('0. all')
+
+    input_index = int(input('Choose directory: '))
+
+    if input_index == 0:
+        for dir in dirs:
+            create_symlinks(dir, target_dir)
+
+    else:
+
+        try:
+            dir = dirs[input_index - 1]
+        except IndexError:
+            print('Wrong input')
+
+        else:
+            create_symlinks(dir, target_dir)
+
