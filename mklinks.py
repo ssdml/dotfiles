@@ -3,7 +3,7 @@ from pathlib import Path
 IGNORED_DIRS = {'.git',}
 IGNORED_FILES = {'.gitignore', 'mklinks.py'}
 
-DOT_FILES_DIR = Path.home() / Path("Dotfiles")
+DOT_FILES_DIR = Path(__file__).parent.resolve()
 
 
 def create_symlinks(source_dir: Path, target_dir: Path):
