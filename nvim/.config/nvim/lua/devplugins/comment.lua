@@ -1,1 +1,1 @@
-/home/serega/.config/nvim/lua/allplugins/comment.lua
+../allplugins/comment.lua

@@ -1,1 +1,1 @@
-/home/serega/Dotfiles/nvim/.config/nvim/lua/allplugins/floatterm.lua
+../allplugins/floatterm.lua

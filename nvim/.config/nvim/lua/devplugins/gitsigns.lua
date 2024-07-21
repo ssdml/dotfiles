@@ -1,1 +1,1 @@
-/home/serega/.config/nvim/lua/allplugins/gitsigns.lua
+../allplugins/gitsigns.lua

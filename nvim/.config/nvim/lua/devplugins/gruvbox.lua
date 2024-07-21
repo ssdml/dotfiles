@@ -1,1 +1,1 @@
-/home/serega/.config/nvim/lua/allplugins/gruvbox.lua
+../allplugins/gruvbox.lua

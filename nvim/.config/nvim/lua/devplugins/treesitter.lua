@@ -1,1 +1,1 @@
-/home/serega/.config/nvim/lua/allplugins/treesitter.lua
+../allplugins/treesitter.lua
