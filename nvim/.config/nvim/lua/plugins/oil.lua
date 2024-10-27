@@ -1,1 +1,1 @@
-/home/serega/.config/nvim/lua/allplugins/oil.lua
+../allplugins/oil.lua

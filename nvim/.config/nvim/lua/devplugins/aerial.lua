@@ -1,1 +1,1 @@
-/home/serega/.config/nvim/lua/allplugins/aerial.lua
+../allplugins/aerial.lua

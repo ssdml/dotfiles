@@ -1,1 +1,1 @@
-/home/serega/.config/nvim/lua/allplugins/bufferline.lua
+../allplugins/bufferline.lua

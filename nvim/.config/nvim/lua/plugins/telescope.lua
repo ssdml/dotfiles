@@ -1,1 +1,1 @@
-/home/serega/.config/nvim/lua/allplugins/telescope.lua
+../allplugins/telescope.lua

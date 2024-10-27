@@ -1,1 +1,1 @@
-/home/serega/.config/nvim/lua/allplugins/cmp.lua
+../allplugins/cmp.lua
